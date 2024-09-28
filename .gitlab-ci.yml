@@ -1,0 +1,59 @@
+stages:
+  - build
+  - release
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+    - .kotlin
+
+build-linux:
+  stage: build
+  before_script:
+    - export JAVA_HOME=/home/sdks/zulu-17
+  script:
+    - ./gradlew 
+      -DpublishDocs.root=/var/www/docs/multiplatform-dlfcn 
+      clean 
+      publish 
+      publishDocs 
+      --no-daemon 
+      --stacktrace
+  only:
+    - master
+  tags:
+    - linux
+
+build-macos:
+  stage: build
+  before_script:
+    - export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+  script:
+    - ./gradlew 
+      clean
+      publish{MacosX64,MacosArm64}PublicationToGitlabRepository
+      --no-daemon
+      --stacktrace
+  only:
+    - master
+  tags:
+    - macos
+
+create-release:
+  stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never                                  
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "Creating release for $CI_COMMIT_TAG"
+  release:
+    tag_name: '$(cat .version).$CI_PIPELINE_IID'
+    description: '$(cat .version).$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'
+  tags:
+    - linux

@@ -1,0 +1,22 @@
+[versions]
+agp = "8.4.2"
+kotlin = "2.0.10"
+kotlinxCoroutines = "1.9.0"
+androidMinSdk = "28"
+androidCompileSdk = "34"
+core = "1.13.1"
+stately = "2.1.0"
+
+dokka = "1.9.20" # https://github.com/Kotlin/dokka/releases"
+
+[libraries]
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+stately-concurrency = { group = "co.touchlab", name = "stately-concurrency", version.ref = "stately" }
+stately-collections = { group = "co.touchlab", name = "stately-concurrent-collections", version.ref = "stately" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
