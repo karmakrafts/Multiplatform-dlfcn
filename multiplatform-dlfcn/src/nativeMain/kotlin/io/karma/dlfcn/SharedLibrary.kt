@@ -18,6 +18,7 @@
 
 package io.karma.dlfcn
 
+import dlfcn.RTLD_LAZY
 import dlfcn.RTLD_NOW
 import dlfcn.dlclose
 import dlfcn.dlopen
@@ -29,15 +30,26 @@ import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.reinterpret
 
+enum class LinkMode(internal val flag: Int) {
+    // @formatter:off
+    IMMEDIATE(RTLD_NOW),
+    LAZY     (RTLD_LAZY)
+    // @formatter:on
+}
+
 class SharedLibrary internal constructor(
-    val name: String
+    val name: String,
+    val linkMode: LinkMode
 ) : AutoCloseable {
     companion object {
-        fun open(name: String): SharedLibrary = SharedLibrary(name)
+        fun open(
+            name: String,
+            linkMode: LinkMode = LinkMode.LAZY
+        ): SharedLibrary = SharedLibrary(name, linkMode)
     }
 
     private val handle: CValuesRef<*> =
-        requireNotNull(dlopen(name, RTLD_NOW)) { "Could not find shared library $name" }
+        requireNotNull(dlopen(name, linkMode.flag)) { "Could not find shared library $name" }
 
     override fun close() {
         dlclose(handle)

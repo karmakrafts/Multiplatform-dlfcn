@@ -34,7 +34,6 @@ java {
 val dlfcnFiles = projectDir.toPath() / "dlfcn"
 
 kotlin {
-    jvm()
     mingwX64 {
         val dlfcnHome = dlfcnFiles / "windows-x64"
         compilations["main"].cinterops {
@@ -47,7 +46,7 @@ kotlin {
             sharedLib {
                 linkerOpts(
                     "-L${dlfcnHome / "lib"}",
-                    "-lssp",
+                    "-lssp", // Stack protector support for canaries
                     "-ldl"
                 )
             }
