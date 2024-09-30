@@ -5,6 +5,6 @@ linkerOpts.osx = -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -
 linkerOpts.linux = -L/usr/lib -ldl
 linkerOpts.mingw = -L/usr/lib -lssp -ldl
 
-compilerOpts.osx = -Idlfcn/macos/include
-compilerOpts.linux = -Idlfcn/linux/include
-compilerOpts.mingw = -Idlfcn/windows/include
+compilerOpts.osx = -static -Idlfcn/macos/include
+compilerOpts.linux = -static -Idlfcn/linux/include
+compilerOpts.mingw = -static -Idlfcn/windows/include
