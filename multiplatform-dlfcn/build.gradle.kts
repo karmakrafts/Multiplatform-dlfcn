@@ -47,7 +47,8 @@ kotlin {
                 linkerOpts(
                     "-L${dlfcnHome / "lib"}",
                     "-lssp", // Stack protector support for canaries
-                    "-l${dlfcnHome / "lib" / "libdl.a"}"
+                    "-l${dlfcnHome / "lib" / "libdl.a"}",
+                    "-l${dlfcnHome / "lib" / "libdl.dll.a"}"
                 )
             }
         }
