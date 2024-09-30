@@ -3,7 +3,7 @@ headers = dlfcn.h
 
 linkerOpts.osx = -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -ldl
 linkerOpts.linux = -L/usr/lib -ldl
-linkerOpts.mingw = -L/usr/lib -ldl
+linkerOpts.mingw = -L/usr/lib -lssp -ldl
 
 compilerOpts.osx = -Idlfcn/macos/include
 compilerOpts.linux = -Idlfcn/linux/include
