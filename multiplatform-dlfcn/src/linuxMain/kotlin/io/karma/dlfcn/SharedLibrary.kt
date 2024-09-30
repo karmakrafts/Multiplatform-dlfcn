@@ -30,4 +30,4 @@ package io.karma.dlfcn/*
  * limitations under the License.
  */
 
-internal actual val C_STD_LIB: String = "libc.so.6"
+internal actual val C_STD_LIB: Array<String> = arrayOf("libc.so", "libc.so.6")

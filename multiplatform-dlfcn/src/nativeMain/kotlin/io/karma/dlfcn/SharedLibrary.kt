@@ -30,7 +30,7 @@ import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.reinterpret
 
-internal expect val C_STD_LIB: String
+internal expect val C_STD_LIB: Array<String>
 
 enum class LinkMode(internal val flag: Int) {
     // @formatter:off
@@ -46,13 +46,25 @@ class SharedLibrary internal constructor(
 ) : AutoCloseable {
     companion object {
         fun open(
-            name: String,
+            names: Array<String>,
             linkMode: LinkMode = LinkMode.LAZY
         ): SharedLibrary? {
-            val handle = dlopen(name, linkMode.flag)
+            if (names.isEmpty()) return null
+
+            val nameIterator = names.iterator()
+            var name = nameIterator.next()
+            var handle = dlopen(name, linkMode.flag)
+            while (nameIterator.hasNext() && handle == null) {
+                name = nameIterator.next()
+                handle = dlopen(name, linkMode.flag)
+            }
+
             return if (handle == null) null
             else SharedLibrary(name, linkMode, handle)
         }
+
+        fun open(name: String, linkMode: LinkMode = LinkMode.LAZY): SharedLibrary? =
+            open(arrayOf(name), linkMode)
 
         fun openCStdLib(): SharedLibrary? = open(C_STD_LIB)
     }

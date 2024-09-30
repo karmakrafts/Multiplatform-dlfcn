@@ -30,4 +30,4 @@ package io.karma.dlfcn/*
  * limitations under the License.
  */
 
-internal actual val C_STD_LIB: String = "libSystem.dylib"
+internal actual val C_STD_LIB: Array<String> = arrayOf("libSystem", "libSystem.dylib")

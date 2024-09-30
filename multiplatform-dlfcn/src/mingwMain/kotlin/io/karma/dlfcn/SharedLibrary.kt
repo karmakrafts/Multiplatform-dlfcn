@@ -30,4 +30,4 @@ package io.karma.dlfcn/*
  * limitations under the License.
  */
 
-internal actual val C_STD_LIB: String = "msvcrt.dll"
+internal actual val C_STD_LIB: Array<String> = arrayOf("msvcrt.dll")
