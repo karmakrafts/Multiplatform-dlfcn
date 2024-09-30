@@ -17,7 +17,6 @@
 import java.util.Properties
 import kotlin.io.path.div
 import kotlin.io.path.inputStream
-import kotlin.io.path.readText
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
@@ -29,8 +28,7 @@ val buildConfig: Properties = Properties().apply {
         load(it)
     }
 }
-
-val baseVersion: String = (rootDir.toPath() / ".version").readText()
+val baseVersion: String = libs.versions.multiplatformDlfcn.get()
 
 allprojects {
     group = buildConfig["group"] as String

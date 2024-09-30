@@ -1,4 +1,5 @@
 [versions]
+multiplatformDlfcn = "1.1.0"
 kotlin = "2.0.10"
 kotest = "5.9.1"
 
