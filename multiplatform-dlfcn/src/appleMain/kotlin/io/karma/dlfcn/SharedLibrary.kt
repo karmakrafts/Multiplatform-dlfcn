@@ -31,4 +31,4 @@ package io.karma.dlfcn/*
  */
 
 internal actual val C_STD_LIB: Array<String> =
-    arrayOf("/usr/lib/libSystem.B.dylib", "libSystem", "libSystem.dylib")
+    arrayOf("libc.dylib", "libSystem", "libSystem.dylib")
