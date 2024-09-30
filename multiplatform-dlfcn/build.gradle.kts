@@ -35,9 +35,6 @@ kotlin {
                 val dlfcn by creating {}
             }
         }
-        binaries {
-            staticLib {}
-        }
     }
     listOf(linuxX64(), linuxArm64()).forEach { target ->
         target.apply {
@@ -45,9 +42,6 @@ kotlin {
                 cinterops {
                     val dlfcn by creating
                 }
-            }
-            binaries {
-                staticLib {}
             }
         }
     }
@@ -57,9 +51,6 @@ kotlin {
                 cinterops {
                     val dlfcn by creating
                 }
-            }
-            binaries {
-                staticLib {}
             }
         }
     }
