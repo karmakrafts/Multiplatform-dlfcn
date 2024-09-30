@@ -45,6 +45,7 @@ kotlin {
         }
         binaries {
             sharedLib {
+                freeCompilerArgs += listOf("-linker-option", "--allow-shlib-undefined")
                 linkerOpts(
                     "-L ${(dlfcnHome / "lib").absolutePathString()}",
                     "-lssp", // Stack protector support for canaries
