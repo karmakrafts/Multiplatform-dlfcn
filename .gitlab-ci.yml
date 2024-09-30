@@ -1,5 +1,6 @@
 stages:
-  - build
+  - test
+  - publish
   - release
 
 before_script:
@@ -11,29 +12,59 @@ cache:
     - .gradle/caches
     - .kotlin
 
-build-linux:
-  stage: build
+test-linux:
+  stage: test
   before_script:
     - export JAVA_HOME=/home/sdks/zulu-17
   script:
-    - ./gradlew 
-      -DpublishDocs.root=/var/www/docs/multiplatform-dlfcn 
-      clean 
-      publish 
-      publishDocs 
-      --no-daemon 
+    - ./gradlew
+      clean
+      linuxX64Test
+      --no-daemon
       --stacktrace
   only:
     - master
   tags:
     - linux
 
-build-macos:
-  stage: build
+test-macos:
+  stage: test
   before_script:
     - export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
   script:
-    - ./gradlew 
+    - ./gradlew
+      clean
+      macosArm64Test
+      --no-daemon
+      --stacktrace
+  only:
+    - master
+  tags:
+    - macos
+
+publish-linux:
+  stage: publish
+  before_script:
+    - export JAVA_HOME=/home/sdks/zulu-17
+  script:
+    - ./gradlew
+      -DpublishDocs.root=/var/www/docs/multiplatform-dlfcn
+      clean
+      publish
+      publishDocs
+      --no-daemon
+      --stacktrace
+  only:
+    - master
+  tags:
+    - linux
+
+publish-macos:
+  stage: publish
+  before_script:
+    - export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+  script:
+    - ./gradlew
       clean
       publish{MacosX64,MacosArm64}PublicationToGitlabRepository
       --no-daemon
@@ -47,7 +78,7 @@ create-release:
   stage: release
   rules:
     - if: $CI_COMMIT_TAG
-      when: never                                  
+      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - echo "Creating release for $CI_COMMIT_TAG"
