@@ -32,8 +32,11 @@ kotlin {
     mingwX64 {
         compilations.configureEach {
             cinterops {
-                val dlfcn by creating
+                val dlfcn by creating {}
             }
+        }
+        binaries {
+            staticLib {}
         }
     }
     listOf(linuxX64(), linuxArm64()).forEach { target ->
@@ -43,6 +46,9 @@ kotlin {
                     val dlfcn by creating
                 }
             }
+            binaries {
+                staticLib {}
+            }
         }
     }
     listOf(macosX64(), macosArm64()).forEach { target ->
@@ -51,6 +57,9 @@ kotlin {
                 cinterops {
                     val dlfcn by creating
                 }
+            }
+            binaries {
+                staticLib {}
             }
         }
     }
