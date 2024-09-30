@@ -42,6 +42,19 @@ test-macos:
   tags:
     - macos
 
+test-windows:
+  stage: test
+  script:
+    - gradlew
+      clean
+      mingwX64Test
+      --no-daemon
+      --stacktrace
+  only:
+    - master
+  tags:
+    - windows
+
 publish-linux:
   stage: publish
   before_script:
