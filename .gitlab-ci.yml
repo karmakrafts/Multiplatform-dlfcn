@@ -42,7 +42,7 @@ test-macos:
 test-windows:
   stage: test
   script:
-    - gradlew
+    - ./gradlew
       clean
       mingwX64Test
       --no-daemon
