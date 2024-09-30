@@ -15,6 +15,7 @@
  */
 
 import org.jetbrains.kotlin.konan.target.KonanTarget
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.div
 
 plugins {
@@ -38,16 +39,16 @@ kotlin {
         val dlfcnHome = dlfcnFiles / "windows-x64"
         compilations["main"].cinterops {
             val dlfcn by creating {
-                compilerOpts("-I${dlfcnHome / "include"}")
-                headers("${dlfcnHome / "include" / "dlfcn.h"}")
+                compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
+                headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
             }
         }
         binaries {
             sharedLib {
                 linkerOpts(
-                    "-L${dlfcnHome / "lib"}",
+                    "-L ${(dlfcnHome / "lib").absolutePathString()}",
                     "-lssp", // Stack protector support for canaries
-                    "-l:${dlfcnHome / "lib" / "libdl.a"}"
+                    "-l:libdl.a"
                 )
             }
         }
@@ -62,13 +63,13 @@ kotlin {
         target.apply {
             compilations["main"].cinterops {
                 val dlfcn by creating {
-                    compilerOpts("-I${dlfcnHome / "include"}")
-                    headers("${dlfcnHome / "include" / "dlfcn.h"}")
+                    compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
+                    headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
                 }
             }
             binaries {
                 sharedLib {
-                    linkerOpts("-L/usr/lib", "-ldl")
+                    linkerOpts("-L /usr/lib", "-ldl")
                 }
             }
         }
@@ -83,8 +84,8 @@ kotlin {
         target.apply {
             compilations["main"].cinterops {
                 val dlfcn by creating {
-                    compilerOpts("-I${dlfcnHome / "include"}")
-                    headers("${dlfcnHome / "include" / "dlfcn.h"}")
+                    compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
+                    headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
                 }
             }
             binaries {
@@ -93,7 +94,7 @@ kotlin {
                 }
                 sharedLib {
                     linkerOpts(
-                        "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",
+                        "-L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",
                         "-ldl"
                     )
                 }
