@@ -39,18 +39,13 @@ kotlin {
         val dlfcnHome = dlfcnFiles / "windows-x64"
         compilations["main"].cinterops {
             val dlfcn by creating {
-                compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
-                headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
-            }
-        }
-        binaries {
-            sharedLib {
-                freeCompilerArgs += listOf("-linker-option", "--allow-shlib-undefined")
-                linkerOpts(
-                    "-L ${(dlfcnHome / "lib").absolutePathString()}",
+                compilerOpts(
+                    "-I${(dlfcnHome / "include").absolutePathString()}",
+                    "-L${(dlfcnHome / "lib").absolutePathString()}",
                     "-lssp", // Stack protector support for canaries
-                    "-l:libdl.a"
+                    "-l:libdl.a",
                 )
+                headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
             }
         }
     }
