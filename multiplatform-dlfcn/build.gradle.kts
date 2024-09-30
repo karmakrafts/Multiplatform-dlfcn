@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.konan.target.KonanTarget
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.div
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.dokka)
@@ -32,67 +28,28 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-val dlfcnFiles = projectDir.toPath() / "dlfcn"
-
 kotlin {
     mingwX64 {
-        val dlfcnHome = dlfcnFiles / "windows-x64"
-        compilations["main"].cinterops {
-            val dlfcn by creating {
-                compilerOpts(
-                    "-I${(dlfcnHome / "include").absolutePathString()}",
-                    "-L${(dlfcnHome / "lib").absolutePathString()}",
-                    "-lssp", // Stack protector support for canaries
-                    "-l:libdl.a",
-                )
-                headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
+        compilations.configureEach {
+            cinterops {
+                val dlfcn by creating
             }
         }
     }
     listOf(linuxX64(), linuxArm64()).forEach { target ->
-        val platformPair = when (target.konanTarget) {
-            KonanTarget.LINUX_X64 -> "linux-x64"
-            KonanTarget.LINUX_ARM64 -> "linux-arm64"
-            else -> throw IllegalStateException("Unsupported target platform")
-        }
-        val dlfcnHome = dlfcnFiles / platformPair
         target.apply {
-            compilations["main"].cinterops {
-                val dlfcn by creating {
-                    compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
-                    headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
-                }
-            }
-            binaries {
-                sharedLib {
-                    linkerOpts("-L /usr/lib", "-ldl")
+            compilations.configureEach {
+                cinterops {
+                    val dlfcn by creating
                 }
             }
         }
     }
     listOf(macosX64(), macosArm64()).forEach { target ->
-        val platformPair = when (target.konanTarget) {
-            KonanTarget.MACOS_X64 -> "macos-x64"
-            KonanTarget.MACOS_ARM64 -> "macos-arm64"
-            else -> throw IllegalStateException("Unsupported target platform")
-        }
-        val dlfcnHome = dlfcnFiles / platformPair
         target.apply {
-            compilations["main"].cinterops {
-                val dlfcn by creating {
-                    compilerOpts("-I${(dlfcnHome / "include").absolutePathString()}")
-                    headers((dlfcnHome / "include" / "dlfcn.h").absolutePathString())
-                }
-            }
-            binaries {
-                framework {
-                    baseName = "multiplatform-dlfcn"
-                }
-                sharedLib {
-                    linkerOpts(
-                        "-L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",
-                        "-ldl"
-                    )
+            compilations.configureEach {
+                cinterops {
+                    val dlfcn by creating
                 }
             }
         }
