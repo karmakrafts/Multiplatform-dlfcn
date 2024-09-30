@@ -35,7 +35,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 private fun MemScope.allocCString(value: String): CPointer<ByteVar> {
-    return allocArrayOf(value.encodeToByteArray())
+    return allocArrayOf(value.encodeToByteArray() + 0)
 }
 
 @Test
