@@ -18,17 +18,16 @@
 
 import io.karma.dlfcn.SharedLibrary
 import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.MemScope
-import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.allocArrayOf
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.invoke
 import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.usePinned
-import platform.posix.memcpy
+import kotlinx.cinterop.toKString
 import platform.posix.size_t
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -46,21 +45,17 @@ fun `Load and unload of libc`() {
 }
 
 @Test
-fun `Perform various calls into libc`() = memScoped {
+fun `Call into libc to use memcpy`() = memScoped {
     val lib = SharedLibrary.openCStdLib()
     assertNotNull(lib)
-    val buffer = allocArray<ByteVar>(64)
-    lib.findFunction<(CPointer<ByteVar>, CPointer<ByteVar>, CPointer<ByteVar>) -> Int>("sprintf")(
-        buffer,
-        allocCString("%s from C!"),
-        allocCString("Hello world")
+    val value = "Hello World!"
+    val sourceBuffer = allocCString(value)
+    val destBuffer = allocArray<ByteVar>(value.length + 1)
+    lib.findFunction<(COpaquePointer?, COpaquePointer?, size_t) -> COpaquePointer?>("memcpy")(
+        destBuffer,
+        sourceBuffer,
+        (value.length + 1).convert()
     )
-    val length = lib.findFunction<(CPointer<ByteVar>) -> size_t>("strlen")(buffer)
-    val bufferValue = ByteArray(length.convert()).apply {
-        usePinned { pinnedArray ->
-            memcpy(pinnedArray.addressOf(0), buffer, length)
-        }
-    }.decodeToString()
-    assertEquals("Hello world from C!", bufferValue)
+    assertEquals(value, destBuffer.toKString())
     lib.close()
 }
