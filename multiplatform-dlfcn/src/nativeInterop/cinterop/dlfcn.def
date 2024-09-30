@@ -4,8 +4,8 @@ headers = dlfcn.h
 linkerOpts.osx = -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -ldl
 linkerOpts.linux = -L/usr/lib -ldl
 
-libraryPaths.mingw = dlfcn/windows/lib
 staticLibraries.mingw = libdl.a
+libraryPaths.mingw = dlfcn/windows/lib
 
 compilerOpts.osx = -Idlfcn/macos/include
 compilerOpts.linux = -Idlfcn/linux/include
