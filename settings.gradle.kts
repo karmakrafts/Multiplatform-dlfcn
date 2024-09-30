@@ -32,3 +32,4 @@ dependencyResolutionManagement {
 }
 
 include("multiplatform-dlfcn")
+include("multiplatform-dlfcn-tests")

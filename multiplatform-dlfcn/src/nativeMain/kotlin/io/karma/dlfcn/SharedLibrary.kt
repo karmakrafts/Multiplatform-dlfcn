@@ -30,6 +30,8 @@ import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.reinterpret
 
+internal expect val C_STD_LIB: String
+
 enum class LinkMode(internal val flag: Int) {
     // @formatter:off
     IMMEDIATE(RTLD_NOW),
@@ -39,17 +41,21 @@ enum class LinkMode(internal val flag: Int) {
 
 class SharedLibrary internal constructor(
     val name: String,
-    val linkMode: LinkMode
+    val linkMode: LinkMode,
+    val handle: CValuesRef<*>,
 ) : AutoCloseable {
     companion object {
         fun open(
             name: String,
             linkMode: LinkMode = LinkMode.LAZY
-        ): SharedLibrary = SharedLibrary(name, linkMode)
-    }
+        ): SharedLibrary? {
+            val handle = dlopen(name, linkMode.flag)
+            return if (handle == null) null
+            else SharedLibrary(name, linkMode, handle)
+        }
 
-    private val handle: CValuesRef<*> =
-        requireNotNull(dlopen(name, linkMode.flag)) { "Could not find shared library $name" }
+        fun openCStdLib(): SharedLibrary? = open(C_STD_LIB)
+    }
 
     override fun close() {
         dlclose(handle)
