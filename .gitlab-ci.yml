@@ -92,12 +92,12 @@ create-release:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
     - echo "Fetching project version from libs.versions.toml"
-    - export PROJECT_VERSION=$(./gradlew printVersion --quiet)
+    - export PROJECT_VERSION=$(./gradlew generateVersionInfo --quiet)
   script:
     - echo "Creating release for version $PROJECT_VERSION.$CI_PIPELINE_IID"
   release:
-    tag_name: '$PROJECT_VERSION.$CI_PIPELINE_IID'
-    description: '$PROJECT_VERSION.$CI_PIPELINE_IID'
+    tag_name: '$(cat .version).$CI_PIPELINE_IID'
+    description: '$(cat .version).$CI_PIPELINE_IID'
     ref: '$CI_COMMIT_SHA'
   tags:
     - linux

@@ -17,6 +17,7 @@
 import java.util.Properties
 import kotlin.io.path.div
 import kotlin.io.path.inputStream
+import kotlin.io.path.writeText
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
@@ -30,9 +31,10 @@ val buildConfig: Properties = Properties().apply {
 }
 val baseVersion: String = libs.versions.multiplatformDlfcn.get()
 
-val printVersion by tasks.registering {
+val generateVersionInfo by tasks.registering {
     doLast {
         println(baseVersion)
+        (rootDir.toPath() / ".version").writeText(baseVersion)
     }
 }
 
