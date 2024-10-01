@@ -60,7 +60,7 @@ publish-linux:
     - ./gradlew
       -DpublishDocs.root=/var/www/docs/multiplatform-dlfcn
       clean
-      publishLinux{X64,Arm64}PublicationToGitlabRepository
+      publish{KotlinMultiplatform,LinuxX64,LinuxArm64}PublicationToGitlabRepository
       publishDocs
       --no-daemon
       --stacktrace
