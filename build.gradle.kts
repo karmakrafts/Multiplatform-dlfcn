@@ -30,6 +30,12 @@ val buildConfig: Properties = Properties().apply {
 }
 val baseVersion: String = libs.versions.multiplatformDlfcn.get()
 
+val printVersion by tasks.registering {
+    doLast {
+        println(baseVersion)
+    }
+}
+
 allprojects {
     group = buildConfig["group"] as String
     version = "$baseVersion.${System.getenv("CI_PIPELINE_IID") ?: 0}"
