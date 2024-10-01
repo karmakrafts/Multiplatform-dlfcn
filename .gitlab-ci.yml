@@ -60,7 +60,7 @@ publish-linux:
     - ./gradlew
       -DpublishDocs.root=/var/www/docs/multiplatform-dlfcn
       clean
-      publish
+      publishLinux{X64,Arm64}PublicationToGitlabRepository
       publishDocs
       --no-daemon
       --stacktrace
@@ -69,6 +69,19 @@ publish-linux:
   tags:
     - linux
 
+publish-windows:
+  stage: publish
+  script:
+    - ./gradlew
+      clean
+      publishMingwX64PublicationToGitlabRepository
+      --no-daemon
+      --stacktrace
+  only:
+    - master
+  tags:
+    - windows
+
 publish-macos:
   stage: publish
   before_script:
@@ -76,7 +89,7 @@ publish-macos:
   script:
     - ./gradlew
       clean
-      publish{MacosX64,MacosArm64}PublicationToGitlabRepository
+      publishMacos{X64,Arm64}PublicationToGitlabRepository
       --no-daemon
       --stacktrace
   only:
